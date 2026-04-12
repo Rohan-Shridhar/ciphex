@@ -36,6 +36,13 @@ It operates on all 96 printable ASCII characters (space → `~`), making it suit
 
 ---
 
+## Tech stack
+
+- **Language:** JavaScript
+- **Runtime:** Node.js
+
+---
+
 ## Installation
 
 ```bash
