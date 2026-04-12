@@ -23,6 +23,19 @@ It operates on all 96 printable ASCII characters (space → `~`), making it suit
 
 ---
 
+## Repository Structure
+
+```bash
+├── CONTRIBUTING.md     # Contribution file,
+├── LICENSE             # License file.
+├── README.md           # Documentation.
+├── index.js            # Entry script file.
+├── package.json        # Node packages & Project's metadata.
+└── test.js             # Test script file.
+```
+
+---
+
 ## Installation
 
 ```bash
@@ -36,13 +49,13 @@ npm install ciphex
 ```js
 const { encrypt, decrypt, generateKeys } = require("ciphex");
 
-const keys = generateKeys();          // [b, a] — random valid key pair
+const keys = generateKeys(); // [b, a] — random valid key pair
 const cipher = encrypt("hello!", keys);
-const plain  = decrypt(cipher, keys); // "hello!"
+const plain = decrypt(cipher, keys); // "hello!"
 
-console.log(keys);    // e.g. [42, 17]
-console.log(cipher);  // encrypted string
-console.log(plain);   // hello!
+console.log(keys); // e.g. [42, 17]
+console.log(cipher); // encrypted string
+console.log(plain); // hello!
 ```
 
 > **Important:** You must use the same `keys` array for both `encrypt` and `decrypt`. Store or transmit keys securely alongside your ciphertext if needed.
@@ -52,21 +65,26 @@ console.log(plain);   // hello!
 ## API
 
 ### `generateKeys()`
+
 Returns a `[b, a]` key pair where:
+
 - `b` — any integer in `[0, 95]`
 - `a` — any integer in `[1, 95]` that is **coprime to 96** (i.e., has a modular inverse)
 
 ### `encrypt(text, keys)`
+
 - `text` — plaintext string (printable ASCII only)
 - `keys` — `[b, a]` from `generateKeys()`
 - Returns the encrypted string, or `null` if `text` is `null`
 
 ### `decrypt(text, keys)`
+
 - `text` — previously encrypted string
 - `keys` — same `[b, a]` used during encryption
 - Returns the decrypted plaintext string, or `null` if `text` is `null`
 
 ### `modInverse(a)`
+
 Internal helper — returns the modular inverse of `a` under mod 96. Exported for testing purposes.
 
 ---
