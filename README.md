@@ -1,6 +1,6 @@
 # ciphex
 
-> Lightweight text encryption & decryption using affine cipher — works in Node.js and the browser.
+> Lightweight text encryption & decryption combining Vigenère and Affine ciphers — works in Node.js.
 
 [![npm version](https://img.shields.io/npm/v/ciphex.svg)](https://www.npmjs.com/package/ciphex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -11,14 +11,14 @@
 
 ## What is ciphex?
 
-**ciphex** implements the [affine cipher](https://en.wikipedia.org/wiki/Affine_cipher) — a classical substitution cipher that maps each character using:
+**ciphex** implements a combined **Vigenère and Affine cipher**. It maps each character by first applying a Vigenère shift using a key stored in `key.env`, followed by an Affine transformation (multiplication and addition):
 
 ```
-E(x) = (a·x + b) mod 96
-D(x) = a⁻¹ · (x - b) mod 96
+E(x) = ((x + v) · a + b) mod 96
+D(x) = (a⁻¹ · (x - b) - v) mod 96
 ```
 
-where `b` is a shift key and `a` is a multiplicative key coprime to 96.
+where `v` is the Vigenère character shift, `b` is the additive shift key, and `a` is a multiplicative key coprime to 96.
 
 It operates on all 96 printable ASCII characters (space → `~`), making it suitable for encrypting plain text strings.
 
@@ -31,6 +31,7 @@ It operates on all 96 printable ASCII characters (space → `~`), making it suit
 ├── LICENSE             # License file.
 ├── README.md           # Documentation.
 ├── index.js            # Entry script file.
+├── key.env             # Vigenère secret key configuration.
 ├── package.json        # Node packages & Project's metadata.
 └── test.js             # Test script file.
 ```
@@ -54,6 +55,15 @@ npm install ciphex
 
 ## Usage
 
+`ciphex` requires a `key.env` file located in the same directory as the module for the Vigenère cipher base:
+
+**key.env**  
+*Create a key.env in your directory and set a string of your chooice as the value of the key.*
+```env
+key = "SOMETHING"
+```
+
+**Code**
 ```js
 const { encrypt, decrypt, generateKeys } = require("ciphex");
 
@@ -66,7 +76,7 @@ console.log(cipher); // encrypted string
 console.log(plain); // hello!
 ```
 
-> **Important:** You must use the same `keys` array for both `encrypt` and `decrypt`. Store or transmit keys securely alongside your ciphertext if needed.
+> **Important:** You must use the same `keys` array for both `encrypt` and `decrypt`. Store or transmit keys securely alongside your ciphertext if needed. The `key.env` must also map to the same Vigenère key during decryption.
 
 ---
 
@@ -83,12 +93,14 @@ Returns a `[b, a]` key pair where:
 
 - `text` — plaintext string (printable ASCII only)
 - `keys` — `[b, a]` from `generateKeys()`
+- Slices the Vigenère key secretly from `key.env`.
 - Returns the encrypted string, or `null` if `text` is `null`
 
 ### `decrypt(text, keys)`
 
 - `text` — previously encrypted string
 - `keys` — same `[b, a]` used during encryption
+- Requires the same Vigenère key in `key.env`.
 - Returns the decrypted plaintext string, or `null` if `text` is `null`
 
 ### `modInverse(a)`
@@ -110,13 +122,6 @@ Characters outside this range (e.g. emojis, unicode accents) are **not supported
 
 ---
 
-## Limitations
-
-- **Not cryptographically secure.** The affine cipher is a classical/educational cipher and is trivially breakable via frequency analysis. Do not use it to protect sensitive data.
-- Only printable ASCII (codes 32–127) is supported.
-- Key space is small (~32 × 96 = 3,072 possible key pairs).
-
----
 
 ## Contributing
 
