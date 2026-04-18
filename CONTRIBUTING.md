@@ -27,6 +27,28 @@ Please keep PRs focused — one issue per PR is ideal.
 
 ---
 
+## Pull Request Format
+
+### Before opening a PR
+
+- Ensure your current branch is up-to-date with the `main` branch.
+- Fix any typos after adding changes.
+- Test the app with `node test.js`.
+
+### PR Title
+
+Make sure that the title of the PR you are opening is in the same format as the commit messages.
+e.g.:
+
+```
+fix: small description of the fix.
+```
+
+### PR Description
+
+When writing the description for the PR, please follow this format: [PR_TEMPLATE.md](https://github.com/Rohan-Shridhar/ciphex/blob/main/PR_TEMPLATE.md)
+
+---
 
 ## Questions?
 
