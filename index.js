@@ -54,6 +54,11 @@ function encrypt(text, keys) {
   if (text == null) {
     return null;
   }
+  if (/[^\x20-\x7F]/.test(text)) {
+    throw new Error(
+      "Input must contain only printable ASCII characters (32–126)",
+    );
+  }
   let encryptedtext = "";
   for (let i = 0, j = 0; i < text.length; i++) {
     const char = text.charCodeAt(i) - 32;
