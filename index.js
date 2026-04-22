@@ -73,12 +73,12 @@ function isvalidkeys(keys) {
   }
 }
 function encrypt(text, keys) {
+  isvalidtext(text);
   if (/[^\x20-\x7E]/.test(text)) {
     throw new Error(
       `Input must contain only printable ASCII characters (32–126): ${text}`,
     );
   }
-  isvalidtext(text);
   isvalidkeys(keys);
 
   let encryptedtext = "";
