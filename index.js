@@ -47,7 +47,7 @@ function modInverse(a) {
       return x;
     }
   }
-  throw new Error("decryption key is not valid.");
+  throw new Error("key[1] must be coprime to 96"); // This should never happen
 }
 
 function isvalidtext(text) {
@@ -72,14 +72,12 @@ function isvalidkeys(keys) {
     );
   }
 }
-function iscoprimewithbase(num) {
+function valid_coprime_with_base(num) {
   let temp = Math.min(num, base);
   //check for common factors from 2 to min(num, base) if any common factor is found, return false
   for (let i = 2; i <= temp; i++) {
     if (num % i === 0 && base % i === 0) {
-      throw new Error(
-        `Decryption key[1] must be coprime with base (${base}): ${num}`,
-      );
+      throw new Error(`key[1] must be coprime to 96`);
     }
   }
 }
@@ -92,7 +90,7 @@ function encrypt(text, keys) {
     );
   }
   isvalidkeys(keys);
-  iscoprimewithbase(keys[1]);
+  valid_coprime_with_base(keys[1]);
   let encryptedtext = "";
   for (let i = 0, j = 0; i < text.length; i++, j++) {
     const char = text.charCodeAt(i) - 32;
@@ -110,7 +108,7 @@ function encrypt(text, keys) {
 function decrypt(text, keys) {
   isvalidtext(text);
   isvalidkeys(keys);
-  iscoprimewithbase(keys[1]);
+  valid_coprime_with_base(keys[1]);
   let decryptedtext = "";
   for (let i = 0, j = 0; i < text.length; i++) {
     const char = text.charCodeAt(i) - 32;
