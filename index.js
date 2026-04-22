@@ -47,20 +47,42 @@ function modInverse(a) {
       return x;
     }
   }
-  return 1;
+  throw new Error("key[1] must be coprime to 96 for decryption to work");
 }
 
-function encrypt(text, keys) {
+function isvalidtext(text) {
   if (text == null) {
-    return null;
+    throw new Error("Input cannot be null or undefined");
   }
-  if (/[^\x20-\x7E]/.test(text)) {
+
+  if (typeof text !== "string") {
+    throw new Error("Input must be a string");
+  }
+}
+function isvalidkeys(keys) {
+  if (
+    keys == null ||
+    !Array.isArray(keys) ||
+    keys.length !== 2 ||
+    typeof keys[0] !== "number" ||
+    typeof keys[1] !== "number"
+  ) {
     throw new Error(
-      "Input must contain only printable ASCII characters (32–126)",
+      "Keys must be an array of two elements where both elements should be numbers",
     );
   }
+}
+function encrypt(text, keys) {
+  if (/[^\x20-\x7E]/.test(text)) {
+    throw new Error(
+      `Input must contain only printable ASCII characters (32–126): ${text}`,
+    );
+  }
+  isvalidtext(text);
+  isvalidkeys(keys);
+
   let encryptedtext = "";
-  for (let i = 0, j = 0; i < text.length; i++) {
+  for (let i = 0, j = 0; i < text.length; i++, j++) {
     const char = text.charCodeAt(i) - 32;
     const keyCode = vigenereKey.charCodeAt(j % vigenereKey.length) - 32;
 
@@ -69,15 +91,13 @@ function encrypt(text, keys) {
 
     const encryptedChar = String.fromCharCode(encryptedCharCode + 32);
     encryptedtext += encryptedChar;
-    j++;
   }
   return encryptedtext;
 }
 
 function decrypt(text, keys) {
-  if (text == null) {
-    return null;
-  }
+  isvalidtext(text);
+  isvalidkeys(keys);
   let decryptedtext = "";
   for (let i = 0, j = 0; i < text.length; i++) {
     const char = text.charCodeAt(i) - 32;
