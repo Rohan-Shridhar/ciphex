@@ -47,20 +47,52 @@ function modInverse(a) {
       return x;
     }
   }
-  return 1;
+  throw new Error("key[1] must be coprime to 96"); // This should never happen
+}
+
+function isvalidtext(text) {
+  if (text == null) {
+    throw new Error("Input cannot be null or undefined");
+  }
+
+  if (typeof text !== "string") {
+    throw new Error("Input must be a string");
+  }
+}
+function isvalidkeys(keys) {
+  if (
+    keys == null ||
+    !Array.isArray(keys) ||
+    keys.length !== 2 ||
+    typeof keys[0] !== "number" ||
+    typeof keys[1] !== "number"
+  ) {
+    throw new Error(
+      "Keys must be an array of two elements where both elements should be numbers",
+    );
+  }
+}
+function valid_coprime_with_base(num) {
+  let temp = Math.min(num, base);
+  //check for common factors from 2 to min(num, base) if any common factor is found, return false
+  for (let i = 2; i <= temp; i++) {
+    if (num % i === 0 && base % i === 0) {
+      throw new Error(`key[1] must be coprime to 96`);
+    }
+  }
 }
 
 function encrypt(text, keys) {
-  if (text == null) {
-    return null;
-  }
+  isvalidtext(text);
   if (/[^\x20-\x7E]/.test(text)) {
     throw new Error(
-      "Input must contain only printable ASCII characters (32–126)",
+      `Input must contain only printable ASCII characters (32–126): ${text}`,
     );
   }
+  isvalidkeys(keys);
+  valid_coprime_with_base(keys[1]);
   let encryptedtext = "";
-  for (let i = 0, j = 0; i < text.length; i++) {
+  for (let i = 0, j = 0; i < text.length; i++, j++) {
     const char = text.charCodeAt(i) - 32;
     const keyCode = vigenereKey.charCodeAt(j % vigenereKey.length) - 32;
 
@@ -69,15 +101,14 @@ function encrypt(text, keys) {
 
     const encryptedChar = String.fromCharCode(encryptedCharCode + 32);
     encryptedtext += encryptedChar;
-    j++;
   }
   return encryptedtext;
 }
 
 function decrypt(text, keys) {
-  if (text == null) {
-    return null;
-  }
+  isvalidtext(text);
+  isvalidkeys(keys);
+  valid_coprime_with_base(keys[1]);
   let decryptedtext = "";
   for (let i = 0, j = 0; i < text.length; i++) {
     const char = text.charCodeAt(i) - 32;
