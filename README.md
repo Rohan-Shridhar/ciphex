@@ -4,8 +4,9 @@
 
 [![npm version](https://img.shields.io/npm/v/ciphex.svg)](https://www.npmjs.com/package/ciphex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![npm downloads](https://img.shields.io/npm/dw/ciphex)](https://www.npmjs.com/package/ciphex)
+![NPM Downloads](https://img.shields.io/npm/d18m/ciphex)
+
+
 
 ---
 
